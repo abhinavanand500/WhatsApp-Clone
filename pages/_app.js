@@ -8,14 +8,17 @@ import firebase from "firebase";
 function MyApp({ Component, pageProps }) {
     const [user, loading] = useAuthState(auth);
     useEffect(() => {
-        db.collection("users").doc(user.uid).set(
-            {
-                email: user.email,
-                lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-                photoUrl: user.photoURL,
-            },
-            { merge: true },
-        );
+        if (user) {
+            db.collection("users").doc(user.uid).set(
+                {
+                    email: user.email,
+                    name: user.displayName,
+                    lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+                    photoUrl: user.photoURL,
+                },
+                { merge: true },
+            );
+        }
     }, [user]);
     if (loading) return <Loading />;
     if (!user) return <Login />;

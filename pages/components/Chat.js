@@ -5,16 +5,20 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { Avatar } from "@material-ui/core";
+import {useRouter} from 'next/router'
 const Chat = ({ id, users }) => {
-    
+    const router = useRouter();
     const [user] = useAuthState(auth);
     const [receiptSnapshot] = useCollection(db.collection("users").where("email", "==", getRecipientEmail(users, user)));
     const receiptEmail = getRecipientEmail(users, user);
     // console.log(receiptSnapshot)
     const recipient = receiptSnapshot?.docs?.[0]?.data();
     console.log(recipient);
+    const enterChat = ()=>{
+        router.push(`/chat/${id}`)
+    }
     return (
-        <Container>
+        <Container onClick={enterChat}>
             {recipient ? (
                 <UserAvatar src={recipient?.photoUrl} />
             ) : (
